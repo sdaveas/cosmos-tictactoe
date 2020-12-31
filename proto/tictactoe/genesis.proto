@@ -1,0 +1,9 @@
+syntax = "proto3";
+package sdaveas.tictactoe.tictactoe;
+
+option go_package = "github.com/sdaveas/tictactoe/x/tictactoe/types";
+
+// GenesisState defines the capability module's genesis state.
+message GenesisState {
+}
+
