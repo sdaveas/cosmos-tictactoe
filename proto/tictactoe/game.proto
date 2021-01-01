@@ -1,0 +1,45 @@
+syntax = "proto3";
+package sdaveas.tictactoe.tictactoe;
+
+option go_package = "github.com/sdaveas/tictactoe/x/tictactoe/types";
+
+import "gogoproto/gogo.proto";
+
+enum Player {
+  NONE = 0;
+  CREATOR = 1;
+  GUEST = 2;
+}
+
+enum GameStatus {
+  OPEN = 0;
+  RUNNING = 1;
+  CLOSED = 2;
+}
+
+message Game {
+  string creator = 1;
+  string id = 2;
+  string guest = 3;
+  Player oplayer = 4;
+  Player xplayer = 5;
+  Player winner = 6;
+  repeated string board = 7;
+  GameStatus status = 8;
+}
+
+message MsgCreateGame {
+  string creator = 1;
+  string guest = 2;
+}
+
+message MsgUpdateGame {
+  string caller = 1;
+  uint32 id = 2;
+  uint32 cell = 3;
+}
+
+message MsgDeleteGame {
+  string creator = 1;
+  string id = 2;
+}
