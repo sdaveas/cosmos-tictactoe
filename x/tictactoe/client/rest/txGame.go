@@ -94,7 +94,7 @@ func updateGameHandler(clientCtx client.Context) http.HandlerFunc {
 		}
 
         cell64, _ := strconv.ParseUint(cell, 10, 64)
-		msg := types.NewMsgUpdateGame(
+		msg := types.NewMsgMakeMove(
 			req.Creator,
             id,
             cell64,

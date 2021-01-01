@@ -22,8 +22,8 @@ case *types.MsgCreateGame:
 case *types.MsgAcceptGame:
 	return handleMsgAcceptGame(ctx, k, msg)
 
-case *types.MsgUpdateGame:
-	return handleMsgUpdateGame(ctx, k, msg)
+case *types.MsgMakeMove:
+	return handleMsgMakeMove(ctx, k, msg)
 
 case *types.MsgDeleteGame:
 	return handleMsgDeleteGame(ctx, k, msg)

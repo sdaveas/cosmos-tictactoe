@@ -40,10 +40,10 @@ func CmdCreateGame() *cobra.Command {
     return cmd
 }
 
-func CmdUpdateGame() *cobra.Command {
+func CmdMakeMove() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-game [id] [cell]",
-		Short: "Update a game",
+		Use:   "make-move [id] [cell]",
+		Short: "Make a move",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
             id := args[0]
@@ -55,7 +55,7 @@ func CmdUpdateGame() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgUpdateGame(clientCtx.GetFromAddress().String(), id, cell)
+			msg := types.NewMsgMakeMove(clientCtx.GetFromAddress().String(), id, cell)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

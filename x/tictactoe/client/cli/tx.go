@@ -24,7 +24,7 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(CmdCreateGame())
 	cmd.AddCommand(CmdAcceptGame())
-	cmd.AddCommand(CmdUpdateGame())
+	cmd.AddCommand(CmdMakeMove())
 	cmd.AddCommand(CmdDeleteGame())
 
 

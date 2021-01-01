@@ -19,7 +19,7 @@ func handleMsgAcceptGame(ctx sdk.Context, k keeper.Keeper, msg *types.MsgAcceptG
 	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
 }
 
-func handleMsgUpdateGame(ctx sdk.Context, k keeper.Keeper, msg *types.MsgUpdateGame) (*sdk.Result, error) {
+func handleMsgMakeMove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgMakeMove) (*sdk.Result, error) {
 	// var game = types.Game{
 	// 	Creator: msg.Creator,
 	// 	Id:      msg.Id,
@@ -31,7 +31,7 @@ func handleMsgUpdateGame(ctx sdk.Context, k keeper.Keeper, msg *types.MsgUpdateG
     // 	Status: msg.Status,
 	// }
 
-	k.UpdateGame(ctx, *msg)
+	k.MakeMove(ctx, *msg)
 
 	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
 }

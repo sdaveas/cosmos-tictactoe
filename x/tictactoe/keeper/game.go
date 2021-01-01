@@ -76,7 +76,7 @@ func (k Keeper) AcceptGame(ctx sdk.Context, msg types.MsgAcceptGame) {
     store.Set(keyPref, b)
 }
 
-func (k Keeper) UpdateGame(ctx sdk.Context, msg types.MsgUpdateGame) {
+func (k Keeper) MakeMove(ctx sdk.Context, msg types.MsgMakeMove) {
 	// store :=  prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GameKey))
 	// b := k.cdc.MustMarshalBinaryBare(&game)
 	// store.Set(types.KeyPrefix(types.GameKey + game.Id), b)

@@ -38,7 +38,7 @@ message MsgAcceptGame {
   string id = 2;
 }
 
-message MsgUpdateGame {
+message MsgMakeMove {
   string caller = 1;
   string id = 2;
   uint64 cell = 3;

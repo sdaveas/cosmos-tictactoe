@@ -82,26 +82,26 @@ func (msg *MsgAcceptGame) ValidateBasic() error {
   return nil
 }
 
-var _ sdk.Msg = &MsgUpdateGame{}
+var _ sdk.Msg = &MsgMakeMove{}
 
-func NewMsgUpdateGame(caller string, id string, cell uint64) *MsgUpdateGame {
+func NewMsgMakeMove(caller string, id string, cell uint64) *MsgMakeMove {
 
-  return &MsgUpdateGame{
+  return &MsgMakeMove{
     Id: id,
     Caller: caller,
     Cell: cell,
 	}
 }
 
-func (msg *MsgUpdateGame) Route() string {
+func (msg *MsgMakeMove) Route() string {
   return RouterKey
 }
 
-func (msg *MsgUpdateGame) Type() string {
-  return "UpdateGame"
+func (msg *MsgMakeMove) Type() string {
+  return "MakeMove"
 }
 
-func (msg *MsgUpdateGame) GetSigners() []sdk.AccAddress {
+func (msg *MsgMakeMove) GetSigners() []sdk.AccAddress {
   creator, err := sdk.AccAddressFromBech32(msg.Caller)
   if err != nil {
     panic(err)
@@ -109,12 +109,12 @@ func (msg *MsgUpdateGame) GetSigners() []sdk.AccAddress {
   return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgUpdateGame) GetSignBytes() []byte {
+func (msg *MsgMakeMove) GetSignBytes() []byte {
   bz := ModuleCdc.MustMarshalJSON(msg)
   return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgUpdateGame) ValidateBasic() error {
+func (msg *MsgMakeMove) ValidateBasic() error {
   _, err := sdk.AccAddressFromBech32(msg.Caller)
   if err != nil {
     return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
