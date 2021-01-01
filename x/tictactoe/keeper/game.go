@@ -60,6 +60,20 @@ func (k Keeper) CreateGame(ctx sdk.Context, msg types.MsgCreateGame) {
 }
 
 func (k Keeper) AcceptGame(ctx sdk.Context, msg types.MsgAcceptGame) {
+    store :=  prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GameKey))
+    game := k.GetGame(ctx, msg.Id)
+
+    if game.Status != types.GameStatus_OPEN {
+		panic("Game is not Open at the moment.")
+	}
+    if game.Guest != msg.Guest {
+        panic("This is not your game")
+    }
+
+    game.Status = types.GameStatus_RUNNING
+    keyPref := types.KeyPrefix(types.GameKey + msg.Id)
+    b := k.cdc.MustMarshalBinaryBare(&game)
+    store.Set(keyPref, b)
 }
 
 func (k Keeper) UpdateGame(ctx sdk.Context, msg types.MsgUpdateGame) {
