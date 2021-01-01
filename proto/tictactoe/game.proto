@@ -40,8 +40,8 @@ message MsgAcceptGame {
 
 message MsgUpdateGame {
   string caller = 1;
-  uint32 cell = 3;
   string id = 2;
+  uint64 cell = 3;
 }
 
 message MsgDeleteGame {

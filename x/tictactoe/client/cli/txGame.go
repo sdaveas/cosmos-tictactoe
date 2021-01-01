@@ -46,8 +46,8 @@ func CmdUpdateGame() *cobra.Command {
 		Short: "Update a game",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
-            cell64, _ := strconv.ParseUint(args[1], 10, 64)
             id := args[0]
+            cell, _ := strconv.ParseUint(args[1], 10, 64)
 
         	clientCtx := client.GetClientContextFromCmd(cmd)
 			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
@@ -55,7 +55,6 @@ func CmdUpdateGame() *cobra.Command {
 				return err
 			}
 
-            cell := uint32(cell64)
 			msg := types.NewMsgUpdateGame(clientCtx.GetFromAddress().String(), id, cell)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

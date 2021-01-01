@@ -74,6 +74,7 @@ type updateGameRequest struct {
 func updateGameHandler(clientCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
         id := mux.Vars(r)["id"]
+        cell := mux.Vars(r)["cell"]
 
 		var req updateGameRequest
 		if !rest.ReadRESTReq(w, r, clientCtx.LegacyAmino, &req) {
@@ -92,17 +93,11 @@ func updateGameHandler(clientCtx client.Context) http.HandlerFunc {
 			return
 		}
 
-		parsedCell64, err := strconv.ParseUint(req.Oplayer, 10, 64)
-		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
-			return
-		}
-		parsedCell := uint32(parsedCell64)
-
+        cell64, _ := strconv.ParseUint(cell, 10, 64)
 		msg := types.NewMsgUpdateGame(
 			req.Creator,
-            parsedCell,
             id,
+            cell64,
 		)
 
 		tx.WriteGeneratedTxResponse(clientCtx, w, req.BaseReq, msg)
