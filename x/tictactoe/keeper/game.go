@@ -100,10 +100,65 @@ func (k Keeper) AcceptGame(ctx sdk.Context, msg types.MsgAcceptGame) {
     store.Set(keyPref, b)
 }
 
+func expected_role(game types.Game) types.Player {
+    x_counter := strings.Count(game.Board, "X")
+    o_counter := strings.Count(game.Board, "O")
+    if x_counter == o_counter {
+        return game.Xplayer
+    } else if x_counter > o_counter {
+        return game.Oplayer
+    } else {
+        panic("Illegal board state")
+    }
+}
+
+func caller_role(game types.Game, msg types.MsgMakeMove) types.Player {
+    if msg.Caller == game.Creator {
+        return types.Player_CREATOR
+    }
+    return types.Player_GUEST
+}
+
+func assert_valid_move(game types.Game, msg types.MsgMakeMove, caller_role types.Player) {
+    if game.Creator != msg.Caller && game.Guest != msg.Caller {
+        panic("This is not your game")
+    }
+    if game.Status != types.GameStatus_RUNNING {
+		panic("Game is not Running at the moment.")
+	}
+    if msg.Cell > 8 {
+        panic("Cell index out of range")
+    }
+    if game.Board[msg.Cell] != ' ' {
+        panic("Cell already allocated")
+    }
+    if caller_role != expected_role(game) {
+        panic("Not your turn")
+    }
+}
+
+func get_move(role types.Player, game types.Game) string {
+    if role == game.Xplayer {
+        return "X"
+    } else if role == game.Oplayer {
+        return "O"
+    }
+    panic("Unknown role")
+}
+
 func (k Keeper) MakeMove(ctx sdk.Context, msg types.MsgMakeMove) {
-	// store :=  prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GameKey))
-	// b := k.cdc.MustMarshalBinaryBare(&game)
-	// store.Set(types.KeyPrefix(types.GameKey + game.Id), b)
+    store :=  prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GameKey))
+    game := k.GetGame(ctx, msg.Id)
+
+    caller_role := caller_role(game, msg)
+    assert_valid_move(game, msg, caller_role)
+
+    move := get_move(caller_role, game)
+    game.Board = game.Board[:msg.Cell] + move + game.Board[msg.Cell+1:]
+
+    keyPref := types.KeyPrefix(types.GameKey + msg.Id)
+    b := k.cdc.MustMarshalBinaryBare(&game)
+    store.Set(keyPref, b)
 }
 
 func (k Keeper) GetGame(ctx sdk.Context, key string) types.Game {
