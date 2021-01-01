@@ -233,7 +233,7 @@ func (m *MsgCreateGame) GetGuest() string {
 
 type MsgAcceptGame struct {
 	Guest string `protobuf:"bytes,1,opt,name=guest,proto3" json:"guest,omitempty"`
-	Id    uint32 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+	Id    string `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
 }
 
 func (m *MsgAcceptGame) Reset()         { *m = MsgAcceptGame{} }
@@ -276,17 +276,17 @@ func (m *MsgAcceptGame) GetGuest() string {
 	return ""
 }
 
-func (m *MsgAcceptGame) GetId() uint32 {
+func (m *MsgAcceptGame) GetId() string {
 	if m != nil {
 		return m.Id
 	}
-	return 0
+	return ""
 }
 
 type MsgUpdateGame struct {
 	Caller string `protobuf:"bytes,1,opt,name=caller,proto3" json:"caller,omitempty"`
-	Id     uint32 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
 	Cell   uint32 `protobuf:"varint,3,opt,name=cell,proto3" json:"cell,omitempty"`
+	Id     string `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
 }
 
 func (m *MsgUpdateGame) Reset()         { *m = MsgUpdateGame{} }
@@ -329,11 +329,11 @@ func (m *MsgUpdateGame) GetCaller() string {
 	return ""
 }
 
-func (m *MsgUpdateGame) GetId() uint32 {
+func (m *MsgUpdateGame) GetId() string {
 	if m != nil {
 		return m.Id
 	}
-	return 0
+	return ""
 }
 
 func (m *MsgUpdateGame) GetCell() uint32 {

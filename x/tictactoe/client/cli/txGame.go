@@ -46,8 +46,8 @@ func CmdUpdateGame() *cobra.Command {
 		Short: "Update a game",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
-            id64, _ := strconv.ParseUint(args[0], 10, 64)
             cell64, _ := strconv.ParseUint(args[1], 10, 64)
+            id := args[0]
 
         	clientCtx := client.GetClientContextFromCmd(cmd)
 			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
@@ -55,7 +55,6 @@ func CmdUpdateGame() *cobra.Command {
 				return err
 			}
 
-            id := uint32(id64)
             cell := uint32(cell64)
 			msg := types.NewMsgUpdateGame(clientCtx.GetFromAddress().String(), id, cell)
 			if err := msg.ValidateBasic(); err != nil {
@@ -76,7 +75,7 @@ func CmdAcceptGame() *cobra.Command {
 		Short: "Accepts an open game",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-            id64, _ := strconv.ParseUint(args[0], 10, 64)
+            id := args[0]
 
         	clientCtx := client.GetClientContextFromCmd(cmd)
 			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
@@ -84,7 +83,6 @@ func CmdAcceptGame() *cobra.Command {
 				return err
 			}
 
-            id := uint32(id64)
 			msg := types.NewMsgAcceptGame(clientCtx.GetFromAddress().String(), id)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

@@ -35,13 +35,13 @@ message MsgCreateGame {
 
 message MsgAcceptGame {
   string guest = 1;
-  uint32 id = 2;
+  string id = 2;
 }
 
 message MsgUpdateGame {
   string caller = 1;
-  uint32 id = 2;
   uint32 cell = 3;
+  string id = 2;
 }
 
 message MsgDeleteGame {

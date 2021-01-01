@@ -99,15 +99,10 @@ func updateGameHandler(clientCtx client.Context) http.HandlerFunc {
 		}
 		parsedCell := uint32(parsedCell64)
 
-		id64, err := strconv.ParseUint(id, 10, 64)
-		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
-			return
-		}
 		msg := types.NewMsgUpdateGame(
 			req.Creator,
-            uint32(id64),
             parsedCell,
+            id,
 		)
 
 		tx.WriteGeneratedTxResponse(clientCtx, w, req.BaseReq, msg)

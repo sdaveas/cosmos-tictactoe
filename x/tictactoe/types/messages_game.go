@@ -46,7 +46,7 @@ func (msg *MsgCreateGame) ValidateBasic() error {
 
 var _ sdk.Msg = &MsgAcceptGame{}
 
-func NewMsgAcceptGame(guest string, id uint32) *MsgAcceptGame {
+func NewMsgAcceptGame(guest string, id string) *MsgAcceptGame {
   return &MsgAcceptGame{
     Guest: guest,
     Id: id,
@@ -84,7 +84,7 @@ func (msg *MsgAcceptGame) ValidateBasic() error {
 
 var _ sdk.Msg = &MsgUpdateGame{}
 
-func NewMsgUpdateGame(caller string, id uint32, cell uint32) *MsgUpdateGame {
+func NewMsgUpdateGame(caller string, id string, cell uint64) *MsgUpdateGame {
 
   return &MsgUpdateGame{
     Id: id,
