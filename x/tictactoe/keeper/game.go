@@ -5,6 +5,7 @@ import (
 	"github.com/sdaveas/tictactoe/x/tictactoe/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	"strconv"
+    "crypto/sha1"
 )
 
 // GetGameCount get the total number of game
@@ -59,18 +60,40 @@ func (k Keeper) CreateGame(ctx sdk.Context, msg types.MsgCreateGame) {
     k.SetGameCount(ctx, count+1)
 }
 
-func (k Keeper) AcceptGame(ctx sdk.Context, msg types.MsgAcceptGame) {
-    store :=  prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GameKey))
-    game := k.GetGame(ctx, msg.Id)
-
+func assert_valid_accept(game types.Game, msg types.MsgAcceptGame) {
     if game.Status != types.GameStatus_OPEN {
 		panic("Game is not Open at the moment.")
 	}
     if game.Guest != msg.Guest {
         panic("This is not your game")
     }
+}
 
+func assign_players(creator string, host string) (types.Player, types.Player) {
+    h := sha1.New()
+    h.Write([]byte(creator + host))
+    bs := h.Sum(nil)
+    var xplayer types.Player
+    var oplayer types.Player
+    if bs[0] >> 7 == 1 {
+        xplayer = types.Player_CREATOR
+        oplayer = types.Player_GUEST
+    } else {
+        oplayer = types.Player_CREATOR
+        xplayer = types.Player_GUEST
+    }
+    return xplayer, oplayer
+}
+
+func (k Keeper) AcceptGame(ctx sdk.Context, msg types.MsgAcceptGame) {
+    store :=  prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GameKey))
+    game := k.GetGame(ctx, msg.Id)
+
+    assert_valid_accept(game, msg)
+
+    game.Xplayer, game.Oplayer = assign_players(game.Creator, game.Guest)
     game.Status = types.GameStatus_RUNNING
+
     keyPref := types.KeyPrefix(types.GameKey + msg.Id)
     b := k.cdc.MustMarshalBinaryBare(&game)
     store.Set(keyPref, b)
