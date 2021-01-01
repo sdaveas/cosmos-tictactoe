@@ -6,6 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	"strconv"
     "crypto/sha1"
+    "strings"
 )
 
 // GetGameCount get the total number of game
@@ -47,7 +48,7 @@ func (k Keeper) CreateGame(ctx sdk.Context, msg types.MsgCreateGame) {
         Oplayer: types.Player_NONE,
         Xplayer: types.Player_NONE,
         Winner: types.Player_NONE,
-        Board: make([]string, 10),
+        Board: "         ",
         Status: types.GameStatus_OPEN,
     }
 

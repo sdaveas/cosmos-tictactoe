@@ -24,7 +24,7 @@ message Game {
   Player oplayer = 4;
   Player xplayer = 5;
   Player winner = 6;
-  repeated string board = 7;
+  string board = 7;
   GameStatus status = 8;
 }
 
