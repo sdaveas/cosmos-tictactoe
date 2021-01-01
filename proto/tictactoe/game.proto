@@ -33,6 +33,11 @@ message MsgCreateGame {
   string guest = 2;
 }
 
+message MsgAcceptGame {
+  string guest = 1;
+  uint32 id = 2;
+}
+
 message MsgUpdateGame {
   string caller = 1;
   uint32 id = 2;

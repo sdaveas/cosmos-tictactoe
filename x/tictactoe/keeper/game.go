@@ -59,6 +59,9 @@ func (k Keeper) CreateGame(ctx sdk.Context, msg types.MsgCreateGame) {
     k.SetGameCount(ctx, count+1)
 }
 
+func (k Keeper) AcceptGame(ctx sdk.Context, msg types.MsgAcceptGame) {
+}
+
 func (k Keeper) UpdateGame(ctx sdk.Context, msg types.MsgUpdateGame) {
 	// store :=  prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GameKey))
 	// b := k.cdc.MustMarshalBinaryBare(&game)

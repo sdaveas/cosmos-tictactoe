@@ -13,6 +13,12 @@ func handleMsgCreateGame(ctx sdk.Context, k keeper.Keeper, msg *types.MsgCreateG
 	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
 }
 
+func handleMsgAcceptGame(ctx sdk.Context, k keeper.Keeper, msg *types.MsgAcceptGame) (*sdk.Result, error) {
+	k.AcceptGame(ctx, *msg)
+
+	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+}
+
 func handleMsgUpdateGame(ctx sdk.Context, k keeper.Keeper, msg *types.MsgUpdateGame) (*sdk.Result, error) {
 	// var game = types.Game{
 	// 	Creator: msg.Creator,

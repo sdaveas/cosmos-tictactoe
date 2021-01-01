@@ -70,6 +70,34 @@ func CmdUpdateGame() *cobra.Command {
     return cmd
 }
 
+func CmdAcceptGame() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "accept-game [id]",
+		Short: "Accepts an open game",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+            id64, _ := strconv.ParseUint(args[0], 10, 64)
+
+        	clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+            id := uint32(id64)
+			msg := types.NewMsgAcceptGame(clientCtx.GetFromAddress().String(), id)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+    return cmd
+}
+
 func CmdDeleteGame() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete-game [id]",

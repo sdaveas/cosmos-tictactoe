@@ -231,6 +231,58 @@ func (m *MsgCreateGame) GetGuest() string {
 	return ""
 }
 
+type MsgAcceptGame struct {
+	Guest string `protobuf:"bytes,1,opt,name=guest,proto3" json:"guest,omitempty"`
+	Id    uint32 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (m *MsgAcceptGame) Reset()         { *m = MsgAcceptGame{} }
+func (m *MsgAcceptGame) String() string { return proto.CompactTextString(m) }
+func (*MsgAcceptGame) ProtoMessage()    {}
+func (*MsgAcceptGame) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4d1c70769b6ffdc4, []int{2}
+}
+func (m *MsgAcceptGame) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAcceptGame) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAcceptGame.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAcceptGame) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAcceptGame.Merge(m, src)
+}
+func (m *MsgAcceptGame) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAcceptGame) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAcceptGame.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAcceptGame proto.InternalMessageInfo
+
+func (m *MsgAcceptGame) GetGuest() string {
+	if m != nil {
+		return m.Guest
+	}
+	return ""
+}
+
+func (m *MsgAcceptGame) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
 type MsgUpdateGame struct {
 	Caller string `protobuf:"bytes,1,opt,name=caller,proto3" json:"caller,omitempty"`
 	Id     uint32 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`

@@ -44,6 +44,44 @@ func (msg *MsgCreateGame) ValidateBasic() error {
 }
 
 
+var _ sdk.Msg = &MsgAcceptGame{}
+
+func NewMsgAcceptGame(guest string, id uint32) *MsgAcceptGame {
+  return &MsgAcceptGame{
+    Guest: guest,
+    Id: id,
+	}
+}
+
+func (msg *MsgAcceptGame) Route() string {
+  return RouterKey
+}
+
+func (msg *MsgAcceptGame) Type() string {
+  return "AcceptGame"
+}
+
+func (msg *MsgAcceptGame) GetSigners() []sdk.AccAddress {
+  creator, err := sdk.AccAddressFromBech32(msg.Guest)
+  if err != nil {
+    panic(err)
+  }
+  return []sdk.AccAddress{creator}
+}
+
+func (msg *MsgAcceptGame) GetSignBytes() []byte {
+  bz := ModuleCdc.MustMarshalJSON(msg)
+  return sdk.MustSortJSON(bz)
+}
+
+func (msg *MsgAcceptGame) ValidateBasic() error {
+  _, err := sdk.AccAddressFromBech32(msg.Guest)
+  	if err != nil {
+  		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+  	}
+  return nil
+}
+
 var _ sdk.Msg = &MsgUpdateGame{}
 
 func NewMsgUpdateGame(caller string, id uint32, cell uint32) *MsgUpdateGame {

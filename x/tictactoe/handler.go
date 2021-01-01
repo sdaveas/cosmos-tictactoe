@@ -19,6 +19,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 case *types.MsgCreateGame:
 	return handleMsgCreateGame(ctx, k, msg)
 
+case *types.MsgAcceptGame:
+	return handleMsgAcceptGame(ctx, k, msg)
 
 case *types.MsgUpdateGame:
 	return handleMsgUpdateGame(ctx, k, msg)
