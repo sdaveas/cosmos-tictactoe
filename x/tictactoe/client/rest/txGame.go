@@ -19,12 +19,6 @@ type createGameRequest struct {
 	BaseReq rest.BaseReq `json:"base_req"`
 	Creator string `json:"creator"`
 	Guest string `json:"guest"`
-	Oplayer string `json:"oplayer"`
-	Xplayer string `json:"xplayer"`
-	Winner string `json:"winner"`
-	Board string `json:"board"`
-	Status string `json:"status"`
-
 }
 
 func createGameHandler(clientCtx client.Context) http.HandlerFunc {
@@ -49,6 +43,7 @@ func createGameHandler(clientCtx client.Context) http.HandlerFunc {
 
 		parsedGuest := req.Guest
 
+        print("parsedGuest", parsedGuest)
 		msg := types.NewMsgCreateGame(
 			req.Creator,
 			parsedGuest,
@@ -58,25 +53,18 @@ func createGameHandler(clientCtx client.Context) http.HandlerFunc {
 	}
 }
 
-type updateGameRequest struct {
+type acceptGameRequest struct {
 	BaseReq rest.BaseReq `json:"base_req"`
-	Creator string `json:"creator"`
 	Guest string `json:"guest"`
-	Oplayer string `json:"oplayer"`
-	Xplayer string `json:"xplayer"`
-	Winner string `json:"winner"`
-	Board string `json:"board"`
-	Status string `json:"status"`
-
+	id string `json:"id"`
 }
 
 
-func updateGameHandler(clientCtx client.Context) http.HandlerFunc {
+func acceptGameHandler(clientCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
         id := mux.Vars(r)["id"]
-        cell := mux.Vars(r)["cell"]
 
-		var req updateGameRequest
+		var req acceptGameRequest
 		if !rest.ReadRESTReq(w, r, clientCtx.LegacyAmino, &req) {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, "failed to parse request")
 			return
@@ -87,17 +75,55 @@ func updateGameHandler(clientCtx client.Context) http.HandlerFunc {
 			return
 		}
 
-		_, err := sdk.AccAddressFromBech32(req.Creator)
+		_, err := sdk.AccAddressFromBech32(req.Guest)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
-        cell64, _ := strconv.ParseUint(cell, 10, 64)
-		msg := types.NewMsgMakeMove(
-			req.Creator,
+		msg := types.NewMsgAcceptGame(
+			req.Guest,
             id,
-            cell64,
+		)
+
+		tx.WriteGeneratedTxResponse(clientCtx, w, req.BaseReq, msg)
+	}
+}
+
+type makeMoveRequest struct {
+	BaseReq rest.BaseReq `json:"base_req"`
+	Caller string `json:"guest"`
+	id string `json:"id"`
+	Cell string `json:"cell"`
+}
+
+
+func makeMoveHandler(clientCtx client.Context) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+        id := mux.Vars(r)["id"]
+
+		var req makeMoveRequest
+		if !rest.ReadRESTReq(w, r, clientCtx.LegacyAmino, &req) {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, "failed to parse request")
+			return
+		}
+
+		baseReq := req.BaseReq.Sanitize()
+		if !baseReq.ValidateBasic(w) {
+			return
+		}
+
+		_, err := sdk.AccAddressFromBech32(req.Caller)
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+        cell, _ := strconv.ParseUint(req.Cell, 10, 64)
+		msg := types.NewMsgMakeMove(
+			req.Caller,
+            id,
+            cell,
 		)
 
 		tx.WriteGeneratedTxResponse(clientCtx, w, req.BaseReq, msg)
