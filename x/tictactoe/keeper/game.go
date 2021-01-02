@@ -146,6 +146,43 @@ func get_move(role types.Player, game types.Game) string {
     panic("Unknown role")
 }
 
+type State string
+
+const(
+    Running = "Running"
+    Draw = "Draw"
+    Win = "Win"
+)
+
+func game_state(board string, player string, cell64 uint64) State {
+    col := 0
+    row := 0
+    diag := 0
+    rdiag := 0
+    n := 3
+    cell := int(cell64)
+    x := cell/n
+    y := cell%n
+
+    for i:=0; i<n; i++ {
+        if string(board[x*n + i]) == player { col+=1 }
+        if string(board[i*n + y]) == player { row+=1 }
+        if string(board[i*n + i]) == player { diag+=1 }
+        if string(board[i*n + n-i-1]) == player { rdiag+=1 }
+    }
+    if row == n || col == n || diag == n || rdiag == n {
+        return Win
+    }
+
+    x_counter := strings.Count(board, "X")
+    o_counter := strings.Count(board, "O")
+    if x_counter + o_counter == 9 {
+        return Draw
+    }
+
+    return Running
+}
+
 func (k Keeper) MakeMove(ctx sdk.Context, msg types.MsgMakeMove) {
     store :=  prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GameKey))
     game := k.GetGame(ctx, msg.Id)
@@ -155,6 +192,14 @@ func (k Keeper) MakeMove(ctx sdk.Context, msg types.MsgMakeMove) {
 
     move := get_move(caller_role, game)
     game.Board = game.Board[:msg.Cell] + move + game.Board[msg.Cell+1:]
+
+    state := game_state(game.Board, move, msg.Cell)
+    if state == Win {
+        game.Winner = caller_role
+        game.Status = types.GameStatus_CLOSED
+    } else if state == Draw {
+        game.Status = types.GameStatus_CLOSED
+    }
 
     keyPref := types.KeyPrefix(types.GameKey + msg.Id)
     b := k.cdc.MustMarshalBinaryBare(&game)
