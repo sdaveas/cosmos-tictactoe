@@ -5,7 +5,7 @@
       <sp-bank-balances />
       <sp-token-send />
       <!-- this line is used by starport scaffolding # 4 -->
-		<sp-type-form path="sdaveas.tictactoe.tictactoe" type="game" :fields="[ ['guest', 1, 'string'] ]" />
+		<sp-type-form path="sdaveas.tictactoe.tictactoe" type="game" :fields="[ ['creator', 1, 'string'], ['guest', 2, 'string'] ]" />
     </div>
   </div>
 </template>
