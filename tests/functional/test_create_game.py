@@ -124,9 +124,9 @@ def test_accept_game():
     assert res["raw_log"] == "panic"
 
 
-def test_make_move():
+def test_game_X_wins():
     """
-    Test moves
+    Test a game in which X wins
     """
 
     # Assign addresses
@@ -150,26 +150,29 @@ def test_make_move():
 
     x_player, o_player = get_id_of_role(x_player_addr, o_player_addr, creator_addr)
 
-    # play 0,0
-    res = make_move(x_player, game_id, 0)
-    assert res["raw_log"] != "panic", "Move 0 for User1 failed"
-    res = make_move(o_player, game_id, 1)
-    assert res["raw_log"] != "panic", "Move 1 for User2 failed"
-    res = make_move(x_player, game_id, 2)
-    assert res["raw_log"] != "panic", "Move 2 for User1 failed"
-    res = make_move(o_player, game_id, 3)
-    assert res["raw_log"] != "panic", "Move 3 for User2 failed"
-    res = make_move(x_player, game_id, 4)
-    assert res["raw_log"] != "panic", "Move 4 for User1 failed"
-    res = make_move(o_player, game_id, 5)
-    assert res["raw_log"] != "panic", "Move 5 for User2 failed"
-    res = make_move(x_player, game_id, 7)
-    assert res["raw_log"] != "panic", "Move 6 for User1 failed"
-    res = make_move(o_player, game_id, 6)
-    assert res["raw_log"] != "panic", "Move 7 for User2 failed"
-    res = make_move(x_player, game_id, 8)
-    assert res["raw_log"] != "panic", "Move 8 for User1 failed"
+    x_moves = [0, 2, 4, 7, 8]
+    o_moves = [1, 3, 5, 6]
 
+    """
+    X | O | X
+    ---------
+    O | X | O
+    ---------
+    O | X | X
+    """
+
+    # play the game
+    count = 1
+    for x_move, y_move in zip(x_moves, o_moves):
+        res = make_move(x_player, game_id, x_move)
+        assert res["raw_log"] != "panic", "Move " + str(count) + " for X failed"
+        res = make_move(o_player, game_id, y_move)
+        assert res["raw_log"] != "panic", "Move " + str(count) + " for O failed"
+        count += 1
+    # last move by X
+    res = make_move(x_player, game_id, x_moves[-1])
+
+    assert res["raw_log"] != "panic", "Move " + str(count) + " for X failed"
     assert get_winner_id(game_id, x_player, o_player) == x_player, "Invalid winner"
     assert get_status(game_id) == "CLOSED", "Invalid game status"
 
