@@ -29,6 +29,3 @@ def test_accept_game():
     # accept the game as not privilaged user; this should fail
     res = accept_game(USER1, game_id)
     assert res["raw_log"] == "panic"
-
-
-test_accept_game()

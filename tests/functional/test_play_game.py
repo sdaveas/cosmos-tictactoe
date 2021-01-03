@@ -116,6 +116,3 @@ def test_game_x_wins():
     assert res["raw_log"] != "panic", "Move " + str(count) + " for X failed"
     assert get_winner_id(game_id, x_player, o_player) == x_player, "Invalid winner"
     assert get_status(game_id) == "CLOSED", "Invalid game status"
-
-
-test_game_x_wins()
