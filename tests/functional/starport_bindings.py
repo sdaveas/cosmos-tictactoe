@@ -3,7 +3,6 @@ Common functions for tests
 """
 
 import sys
-import os
 import subprocess
 
 
@@ -28,9 +27,13 @@ def starport_bindings(args):
     return output.strip().decode("utf-8")
 
 def main():
+    """
+    Run starport bindings standalone
+    """
+
     assert len(sys.argv) >= 1, "Expected at least one arg"
-    ARGS = list(sys.argv[1:])
-    print(cosmos_function(ARGS))
+    args = list(sys.argv[1:])
+    starport_bindings(args)
 
 if "__name__" == "__main__":
     main()
