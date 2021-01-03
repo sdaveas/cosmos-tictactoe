@@ -89,5 +89,28 @@ def test_accept_game():
     assert res["raw_log"] == "panic"
 
 
+def test_make_move():
+    """
+    Test moves
+    """
+
+    # Assign addresses
+    creator_addr = get_addr_of(USER1)
+    host_addr = get_addr_of(USER2)
+
+    # create a game
+    create_game(USER1, USER2)
+
+    # get game id
+    game_id = count_games() - 1
+
+    # accept game
+    accept_game(USER2, game_id)
+
+    # get players' roles
+    x_player, o_player = find_roles(game_id, creator_addr, host_addr)
+
+
 test_create_game()
 test_accept_game()
+test_make_move()
