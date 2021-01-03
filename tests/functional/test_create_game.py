@@ -67,6 +67,13 @@ def get_winner_id(game_id, x_player_id, o_player_id):
     return None
 
 
+def get_status(game_id):
+
+    game = starport_bindings(["query_game", str(game_id)])
+    status = re.search("status: (\w+)", game).group().split(" ")[1]
+    return status
+
+
 def make_move(user_id, game_id, cell):
 
     res = starport_bindings(["make_move", str(user_id), str(game_id), str(cell)])
@@ -88,6 +95,7 @@ def test_create_game():
     # count games again
     count += 1
     assert count_games() == count, "Game not created"
+    assert get_status(count-1) == "OPEN", "Invalid game state"
 
 
 def test_accept_game():
@@ -105,6 +113,7 @@ def test_accept_game():
     # accept a game as provilages; note that ids start from 0
     res = accept_game(USER2, game_id)
     assert res["raw_log"] != "panic"
+    assert get_status(game_id) == "RUNNING", "Invalid game state"
 
     # accept the game again; this should fail
     res = accept_game(USER2, game_id)
@@ -162,6 +171,7 @@ def test_make_move():
     assert res["raw_log"] != "panic", "Move 8 for User1 failed"
 
     assert get_winner_id(game_id, x_player, o_player) == x_player, "Invalid winner"
+    assert get_status(game_id) == "CLOSED", "Invalid game status"
 
 
 # test_create_game()
