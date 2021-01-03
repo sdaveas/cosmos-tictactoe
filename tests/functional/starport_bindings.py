@@ -12,8 +12,6 @@ def starport_bindings(args):
     Get the address of an account in the blockchain
     """
 
-    print("Executing command:", args)
-
     command = "./starport_bindings.sh"
     for arg in args:
         command += " "
