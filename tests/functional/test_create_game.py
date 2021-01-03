@@ -174,6 +174,6 @@ def test_make_move():
     assert get_status(game_id) == "CLOSED", "Invalid game status"
 
 
-# test_create_game()
-# test_accept_game()
+test_create_game()
+test_accept_game()
 test_make_move()
