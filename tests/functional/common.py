@@ -3,6 +3,7 @@ Common functions for funtional tests
 """
 
 import re
+import json
 from starport_bindings import starport_bindings
 
 USER1 = 1
@@ -45,3 +46,21 @@ def get_status(game_id):
     game = starport_bindings(["query_game", str(game_id)])
     status = re.search(r"status: (\w+)", game).group().split(" ")[1]
     return status
+
+
+def create_game(host_id, guest_id):
+    """
+    Create a game
+    """
+
+    res = starport_bindings(["create_game", str(host_id), str(guest_id)])
+    return json.loads(res.split()[3])
+
+
+def accept_game(guest_id, game_id):
+    """
+    Accept a game
+    """
+
+    res = starport_bindings(["accept_game", str(guest_id), str(game_id)])
+    return json.loads(res.split()[3])
