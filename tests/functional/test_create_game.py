@@ -29,7 +29,7 @@ def get_addr_of(user_id):
     return starport_bindings(["get_addr", str(user_id)]).split()[3]
 
 
-def get_add_of_role(role, host_addr, guest_addr):
+def get_addr_of_role(role, host_addr, guest_addr):
     if role == "CREATOR":
         return host_addr
     if role == "GUEST":
@@ -37,14 +37,40 @@ def get_add_of_role(role, host_addr, guest_addr):
     return None
 
 
+def get_id_of_role(x_player_addr, o_player_addr, creator_addr):
+    if x_player_addr == creator_addr:
+        return USER1, USER2
+    return USER2, USER1
+
+
 def find_roles(game_id, host_addr, guest_addr):
 
     game = starport_bindings(["query_game", str(game_id)])
     xplayer = re.search("xplayer: (\w+)", game).group().split(" ")[1]
     oplayer = re.search("oplayer: (\w+)", game).group().split(" ")[1]
-    return get_add_of_role(xplayer, host_addr, guest_addr), get_add_of_role(
-        oplayer, host_addr, guest_addr
+    return (
+        get_addr_of_role(xplayer, host_addr, guest_addr),
+        get_addr_of_role(oplayer, host_addr, guest_addr),
     )
+
+
+def get_winner_id(game_id, x_player_id, o_player_id):
+
+    game = starport_bindings(["query_game", str(game_id)])
+    winner = re.search("winner: (\w+)", game).group().split(" ")[1]
+    xplayer = re.search("xplayer: (\w+)", game).group().split(" ")[1]
+    oplayer = re.search("oplayer: (\w+)", game).group().split(" ")[1]
+    if winner == xplayer:
+        return x_player_id
+    elif winner == oplayer:
+        return o_player_id
+    return None
+
+
+def make_move(user_id, game_id, cell):
+
+    res = starport_bindings(["make_move", str(user_id), str(game_id), str(cell)])
+    return json.loads(res.split()[3])
 
 
 def test_create_game():
@@ -108,9 +134,36 @@ def test_make_move():
     accept_game(USER2, game_id)
 
     # get players' roles
-    x_player, o_player = find_roles(game_id, creator_addr, host_addr)
+    x_player_addr, o_player_addr = find_roles(game_id, creator_addr, host_addr)
+    assert (
+        x_player_addr is not None and o_player_addr is not None
+    ), "Failed to assign players"
+
+    x_player, o_player = get_id_of_role(x_player_addr, o_player_addr, creator_addr)
+
+    # play 0,0
+    res = make_move(x_player, game_id, 0)
+    assert res["raw_log"] != "panic", "Move 0 for User1 failed"
+    res = make_move(o_player, game_id, 1)
+    assert res["raw_log"] != "panic", "Move 1 for User2 failed"
+    res = make_move(x_player, game_id, 2)
+    assert res["raw_log"] != "panic", "Move 2 for User1 failed"
+    res = make_move(o_player, game_id, 3)
+    assert res["raw_log"] != "panic", "Move 3 for User2 failed"
+    res = make_move(x_player, game_id, 4)
+    assert res["raw_log"] != "panic", "Move 4 for User1 failed"
+    res = make_move(o_player, game_id, 5)
+    assert res["raw_log"] != "panic", "Move 5 for User2 failed"
+    res = make_move(x_player, game_id, 7)
+    assert res["raw_log"] != "panic", "Move 6 for User1 failed"
+    res = make_move(o_player, game_id, 6)
+    assert res["raw_log"] != "panic", "Move 7 for User2 failed"
+    res = make_move(x_player, game_id, 8)
+    assert res["raw_log"] != "panic", "Move 8 for User1 failed"
+
+    assert get_winner_id(game_id, x_player, o_player) == x_player, "Invalid winner"
 
 
-test_create_game()
-test_accept_game()
+# test_create_game()
+# test_accept_game()
 test_make_move()
