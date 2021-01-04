@@ -184,7 +184,7 @@ def test_invalid_moves():
     assert res["raw_log"] == "panic", "Illegal move"
 
 
-def test_game_x_wins():
+def test_x_wins():
     """
     Test a game in which X wins
 
@@ -221,7 +221,7 @@ def test_game_x_wins():
     assert get_status(game_id) == "CLOSED", "Invalid game status"
 
 
-def test_game_o_wins():
+def test_o_wins():
     """
     Test a game in which O wins
 
