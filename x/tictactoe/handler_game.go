@@ -20,16 +20,6 @@ func handleMsgAcceptGame(ctx sdk.Context, k keeper.Keeper, msg *types.MsgAcceptG
 }
 
 func handleMsgMakeMove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgMakeMove) (*sdk.Result, error) {
-	// var game = types.Game{
-	// 	Creator: msg.Creator,
-	// 	Id:      msg.Id,
-    // 	Guest: msg.Guest,
-    // 	Oplayer: msg.Oplayer,
-    // 	Xplayer: msg.Xplayer,
-    // 	Winner: msg.Winner,
-    // 	Board: msg.Board,
-    // 	Status: msg.Status,
-	// }
 
 	k.MakeMove(ctx, *msg)
 
