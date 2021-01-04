@@ -2,6 +2,7 @@
 Functional test for game creation
 """
 
+import pytest
 from common import USER1, USER2, count_games, create_game, get_winner_id, get_status
 
 
