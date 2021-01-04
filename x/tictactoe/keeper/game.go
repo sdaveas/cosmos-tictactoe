@@ -101,8 +101,8 @@ func (k Keeper) AcceptGame(ctx sdk.Context, msg types.MsgAcceptGame) {
 }
 
 func expected_role(game types.Game) types.Player {
-    x_counter := strings.Count(game.Board, "X")
-    o_counter := strings.Count(game.Board, "O")
+    x_counter := strings.Count(game.Board, X)
+    o_counter := strings.Count(game.Board, O)
     if x_counter == o_counter {
         return game.Xplayer
     } else if x_counter > o_counter {
@@ -154,6 +154,14 @@ const(
     Win = "Win"
 )
 
+type Token string
+
+const(
+    X = "X"
+    O = "O"
+)
+
+// Retrieve game's state
 func game_state(board string, player string, cell64 uint64) State {
     col := 0
     row := 0
@@ -174,8 +182,8 @@ func game_state(board string, player string, cell64 uint64) State {
         return Win
     }
 
-    x_counter := strings.Count(board, "X")
-    o_counter := strings.Count(board, "O")
+    x_counter := strings.Count(board, X)
+    o_counter := strings.Count(board, O)
     if x_counter + o_counter == 9 {
         return Draw
     }
