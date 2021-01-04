@@ -255,3 +255,39 @@ def test_o_wins():
 
     assert get_winner_id(game_id, x_player, o_player) == o_player, "Invalid winner"
     assert get_status(game_id) == "CLOSED", "Invalid game status"
+
+
+def test_draw():
+    """
+    Test a draw game
+
+    X|O|X
+    X|X|O
+    O|X|O
+    """
+
+    # make game
+    create_game(creator, guest)
+    game_id = count_games() - 1
+    accept_game(guest, game_id)
+
+    # get roles
+    x_player_addr, o_player_addr = find_roles(game_id, creator_addr, guest_addr)
+    x_player, o_player = get_corresp_role(x_player_addr, creator_addr)
+
+    x_moves = [0, 2, 3, 4, 7]
+    o_moves = [1, 5, 6, 8]
+
+    # play the game
+    count = 1
+    for x_move, y_move in zip(x_moves, o_moves):
+        res = make_move(x_player, game_id, x_move)
+        assert res["raw_log"] != "panic", "Move " + str(count) + " for X failed"
+        res = make_move(o_player, game_id, y_move)
+        assert res["raw_log"] != "panic", "Move " + str(count) + " for O failed"
+        count += 1
+    # last move by X
+    res = make_move(x_player, game_id, x_moves[-1])
+
+    assert get_winner_id(game_id, x_player, o_player) == None, "Invalid winner"
+    assert get_status(game_id) == "CLOSED", "Invalid game status"
