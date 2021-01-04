@@ -70,9 +70,9 @@ func assert_valid_accept(game types.Game, msg types.MsgAcceptGame) {
     }
 }
 
-func assign_players(creator string, host string) (types.Player, types.Player) {
+func assign_players(creator string, guest string) (types.Player, types.Player) {
     h := sha1.New()
-    h.Write([]byte(creator + host))
+    h.Write([]byte(creator + guest))
     bs := h.Sum(nil)
     var xplayer types.Player
     var oplayer types.Player
