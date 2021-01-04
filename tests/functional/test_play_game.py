@@ -127,7 +127,9 @@ def test_assign_tokens():
     Test if game has correct xplayer and oplayer
     """
 
-    # accept game
+    # make game
+    create_game(creator, guest)
+    game_id = count_games() - 1
     accept_game(USER2, game_id)
 
     # get players' roles
