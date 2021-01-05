@@ -37,16 +37,16 @@ A list of user accounts created during genesis of your application.
 ## Game
 
 This project creates a blockchain that hosts [tictactoe](https://en.wikipedia.org/wiki/Tic-tac-toe) games.
-The interaction with the blockchain is actualized via cli commands are supported. Each command is described thoroughly below.
+The interaction with the blockchain is actualized via cli commands. Each command is described thoroughly below.
 
 ### Rules
-* All state of the game live on-chain. State includes open games, games currently in progress and completed games.
+* The state of the games live on-chain. State includes open games, games currently in progress and completed games.
 * Any user can submit a transaction to the network to invite others to start a game (i.e. create an open game).
-* Other users may submit transactions to accept invitations. When an invitation is accepted, the game starts.
+* Other users can submit transactions to accept invitations. When an invitation is accepted, the game starts.
 * The roles of “X” and “O” are decided as follows:
-    * users' public keys are concatenated and the result is hashed
+    * Users' public keys are concatenated and the result is hashed.
     * If the first bit of the output is 0, then the guest plays "O" and the host plays "X" and vice versa.
-    * “X” has the first move.
+    * “X” player has the first move.
 * Both users are issuing transactions to the network to make their moves until the game is complete.
 * The blockchain supports multiple concurrent games sessions/players.
 
@@ -56,7 +56,7 @@ A registered user creates a game and indicates a guest
 ```
 tictactoed tx tictactoe create-game <userX address> --from <userY>
 ```
-Then, you should get a preview of the message you are about to submit:
+Request:
 ```
 {"body":{"messages":[{"@type":"/sdaveas.tictactoe.tictactoe.MsgCreateGame","creator":"cosmos1gvfssxktnalf73mqpuu6pac4mtzrpw9lyg92st","guest":"cosmos1t8xz0vw857lk270vttuvjtpflnean0endard3k"}],"memo":"","timeout_height":"0","extension_options":[],"non_critical_extension_options":[]},"auth_info":{"signer_infos":[],"fee":{"amount":[],"gas_limit":"200000","payer":"","granter":""}},"signatures":[]}
 
@@ -71,7 +71,7 @@ You can verify that a game has been created by either querying all games:
 ```
 tictactoed query tictactoe list-game
 ```
-response:
+Response:
 ```
 - board: '         '
   creator: cosmos1gvfssxktnalf73mqpuu6pac4mtzrpw9lyg92st
@@ -91,7 +91,7 @@ or by querying a game by `id`
 ```
 tictactoed query tictactoe show-game 0
 ```
-response:
+Response:
 ```
 Game:
   board: '         '
@@ -113,13 +113,13 @@ Game:
 
 **id**: the id of the game
 
-**xplayer**: The player that is assigned with *X* token (values from [HOST/GUEST/NONE])
+**xplayer**: The player that is assigned with the *X* token (values from [HOST/GUEST/NONE])
 
-**oplayer**: The player that is assigned with *O* token (values from [HOST/GUEST/NONE])
+**oplayer**: The player that is assigned with the *O* token (values from [HOST/GUEST/NONE])
 
 **status**: The current status of the game (values from [OPEN/RUNNING/CLOSED])
 
-**winner**: The winner of the game (values from [HOST/ GUEST/NONE])
+**winner**: The winner of the game (values from [HOST/GUEST/NONE])
 
 ### Accept game
 Next, the guest must accept the game in order to start. This is done by the following message:
@@ -134,7 +134,7 @@ confirm transaction before signing and broadcasting [y/N]:
 ```
 Response:
 ```
-{"height":"4416","txhash":"F75419351DEDA3117761039097497B7B666712A2E31FCEB63C89A7ADC36240AB","codespace":"undefined","code":111222,"data":"","raw_log":"panic","logs":[],"info":"","gas_wanted":"200000","gas_used":"39333","tx":null,"timestamp":""}
+{"height":"56","txhash":"9D160E4A00116DC1713DCF512673378157D52C5C4FCE82285F975374BAC964B9","codespace":"","code":0,"data":"0A0C0A0A41636365707447616D65","raw_log":"[{\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"AcceptGame\"}]}]}]","logs":[{"msg_index":0,"log":"","events":[{"type":"message","attributes":[{"key":"action","value":"AcceptGame"}]}]}],"info":"","gas_wanted":"200000","gas_used":"51179","tx":null,"timestamp":""}
 ```
 Now, the status of the game changes as such:
 ```
@@ -152,7 +152,7 @@ Note that, field `xplayer` and `oplayer` are assigned, and field `status` is set
 
 ### Making moves
 
-Each player can make a move in their turn. If a player attempts to move during their opponent's turn, the move will not be rejected.
+Each player can make a move in their turn. If a player attempts to move during their opponent's turn, the move will be rejected.
 
 Players move by submitting the following message:
 ```
@@ -188,7 +188,6 @@ O | X | O
 O | X | X
 ```
 The messages that can potentially produce the above state are the following:
-
 ```
 tictactoed tx tictactoe make-move 0 0 --from user2 # plays X at (0,0)
 tictactoed tx tictactoe make-move 0 1 --from user1 # plays O at (0,1)
@@ -200,7 +199,7 @@ tictactoed tx tictactoe make-move 0 7 --from user2 # plays X at (2,1)
 tictactoed tx tictactoe make-move 0 6 --from user1 # plays O at (2,0)
 tictactoed tx tictactoe make-move 0 8 --from user2 # plays X at (2,2)
 ```
-Note that, at the last move wins the game for the X player. Now, the status of the game is the following:
+Note that, the last move wins the game for the X player. Now, the status of the game is the following:
 ```
 Game:
   board: 'XOXOXOOXX'
@@ -220,9 +219,9 @@ In the directory
 tictactoe/tests/
 ```
 functional test can be found. Specifically:
-* **test_create_game**: Asserts that a game is created successfully.
-* **test_accept_game**: Asserts that a game is accepted successfully only under the correct circumstances.
-* **test_play_game**: Asserts that a game is played successfully only under the correct circumstances.
+* **test_create_game**: Verifies that a game is created successfully.
+* **test_accept_game**: Verifies that a game is accepted legally only under the correct circumstances.
+* **test_play_game**: Verifies that a game is played legally only under the correct circumstances.
 
 Run the tests by starting a `tictactoe` instance and then:
 ```
