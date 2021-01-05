@@ -106,12 +106,19 @@ Game:
 
 ### Game status:
 **board** : the current state of the game as a string with size 9. Inside of each non-void cell of the string, **X** or **O** tokens are placed.
+
 **creator** : the public address of the creator
+
 **guest**: the public address of the guest
+
 **id**: the id of the game
+
 **xplayer**: The player that is assigned with *X* token (values from [HOST/GUEST/NONE])
+
 **oplayer**: The player that is assigned with *O* token (values from [HOST/GUEST/NONE])
+
 **status**: The current status of the game (values from [OPEN/RUNNING/CLOSED])
+
 **winner**: The winner of the game (values from [HOST/ GUEST/NONE])
 
 ### Accept game
