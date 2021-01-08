@@ -159,6 +159,7 @@ type Token string
 const(
     X = "X"
     O = "O"
+    Empty = " "
 )
 
 // Retrieve game's state
@@ -182,9 +183,8 @@ func game_state(board string, player string, cell64 uint64) State {
         return Win
     }
 
-    x_counter := strings.Count(board, X)
-    o_counter := strings.Count(board, O)
-    if x_counter + o_counter == 9 {
+    empty_cells := strings.Count(board, Empty)
+    if empty_cells == 0 {
         return Draw
     }
 
